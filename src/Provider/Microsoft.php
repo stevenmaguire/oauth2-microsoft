@@ -26,11 +26,7 @@ class Microsoft extends AbstractProvider
 
     public function userDetails($response, AccessToken $token)
     {
-        $client = $this->getHttpClient();
-        $client->setBaseUrl('https://apis.live.net/v5.0/'.$response->id.'/picture');
-        $request = $client->get()->send();
-        $info = $request->getInfo();
-        $imageUrl = $info['url'];
+        $imageUrl = $this->getUserImage($response)['url'];
 
         $user = new User();
 
@@ -47,6 +43,14 @@ class Microsoft extends AbstractProvider
         ]);
 
         return $user;
+    }
+
+    private function getUserImage($response)
+    {
+        $client = $this->getHttpClient();
+        $client->setBaseUrl('https://apis.live.net/v5.0/'.$response->id.'/picture');
+        $request = $client->get()->send();
+        return $request->getInfo();
     }
 
     public function userUid($response, AccessToken $token)
