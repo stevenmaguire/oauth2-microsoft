@@ -33,7 +33,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Stevenmaguire\\OAuth2\\Client\\Test\\": "tests/src/"
+            "Stevenmaguire\\OAuth2\\Client\\Test\\": "test/src/"
         }
     }
 }
