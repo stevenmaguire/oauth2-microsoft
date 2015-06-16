@@ -69,4 +69,19 @@ class Microsoft extends AbstractProvider
     {
         return [$response->first_name, $response->last_name];
     }
+
+    protected function getDefaultScopes()
+    {
+
+    }
+
+    protected function checkResponse($response)
+    {
+
+    }
+
+    protected function prepareUserDetails(array $response, AccessToken $token)
+    {
+
+    }
 }
