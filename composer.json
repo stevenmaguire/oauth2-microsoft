@@ -18,8 +18,8 @@
         "microsoft"
     ],
     "require": {
-        "php": ">=5.4.0",
-        "league/oauth2-client": "1.0.x-dev"
+        "php": ">=5.5.0",
+        "league/oauth2-client": "~1.0@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
