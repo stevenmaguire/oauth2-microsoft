@@ -33,7 +33,7 @@ if (!isset($_GET['code'])) {
 
     // If we don't have an authorization code then get one
     $authUrl = $provider->getAuthorizationUrl();
-    $_SESSION['oauth2state'] = $provider->state;
+    $_SESSION['oauth2state'] = $provider->getState();
     header('Location: '.$authUrl);
     exit;
 
@@ -54,10 +54,10 @@ if (!isset($_GET['code'])) {
     try {
 
         // We got an access token, let's now get the user's details
-        $userDetails = $provider->getUserDetails($token);
+        $user = $provider->getUserDetails($token);
 
         // Use these details to create a new profile
-        printf('Hello %s!', $userDetails->firstName);
+        printf('Hello %s!', $user->getFirstname());
 
     } catch (Exception $e) {
 
@@ -66,6 +66,20 @@ if (!isset($_GET['code'])) {
     }
 
     // Use this to interact with an API on the users behalf
-    echo $token->accessToken;
+    echo $token->getToken();
 }
 ```
+
+#### Managing Scopes and State
+
+Specific `scope` and a custom `state` values may be declared when you request an authorization url from the provider.
+
+```php
+$authorizationUrl = $provider->getAuthorizationUrl([
+    'state' => 'OPTIONAL CUSTOM CONFIGURED STATE',
+    'scope' => ['OPTIONAL', 'SCOPES'] // array or string
+]);
+```
+If neither are defined, the provider will utilize internal defaults.
+
+
