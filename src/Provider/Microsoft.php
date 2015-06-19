@@ -35,7 +35,7 @@ class Microsoft extends AbstractProvider
     /**
      * Get default scopes
      *
-     * @return [type] [description]
+     * @return array
      */
     protected function getDefaultScopes()
     {
@@ -59,7 +59,7 @@ class Microsoft extends AbstractProvider
      *
      * @param object $response
      * @param AccessToken $token
-     * @return League\OAuth2\Client\Provider\UserInterface
+     * @return \League\OAuth2\Client\Provider\UserInterface
      */
     protected function prepareUserDetails(array $response, AccessToken $token)
     {
