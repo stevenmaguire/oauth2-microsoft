@@ -55,7 +55,9 @@ class MicrosoftTest extends \PHPUnit_Framework_TestCase
 
     public function testGetBaseAccessTokenUrl()
     {
-        $url = $this->provider->getBaseAccessTokenUrl();
+        $params = [];
+
+        $url = $this->provider->getBaseAccessTokenUrl($params);
         $uri = parse_url($url);
 
         $this->assertEquals('/oauth20_token.srf', $uri['path']);
@@ -102,13 +104,13 @@ class MicrosoftTest extends \PHPUnit_Framework_TestCase
         $imageResponse->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
 
         $client = m::mock('GuzzleHttp\ClientInterface');
-        $client->shouldReceive('send')->times(1)->andReturn($postResponse);
-        $client->shouldReceive('send')->times(1)->andReturn($userResponse);
-        $client->shouldReceive('send')->times(1)->andReturn($imageResponse);
+        $client->shouldReceive('send')
+            ->times(3)
+            ->andReturn($postResponse, $userResponse, $imageResponse);
         $this->provider->setHttpClient($client);
 
         $token = $this->provider->getAccessToken('authorization_code', ['code' => 'mock_authorization_code']);
-        $user = $this->provider->getUserDetails($token);
+        $user = $this->provider->getUser($token);
 
         $this->assertEquals($email, $user->getEmail());
         $this->assertEquals($firstname, $user->getFirstname());
@@ -142,13 +144,13 @@ class MicrosoftTest extends \PHPUnit_Framework_TestCase
         $imageResponse->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
 
         $client = m::mock('GuzzleHttp\ClientInterface');
-        $client->shouldReceive('send')->times(1)->andReturn($postResponse);
-        $client->shouldReceive('send')->times(1)->andReturn($userResponse);
-        $client->shouldReceive('send')->times(1)->andReturn($imageResponse);
+        $client->shouldReceive('send')
+            ->times(3)
+            ->andReturn($postResponse, $userResponse, $imageResponse);
         $this->provider->setHttpClient($client);
 
         $token = $this->provider->getAccessToken('authorization_code', ['code' => 'mock_authorization_code']);
-        $user = $this->provider->getUserDetails($token);
+        $user = $this->provider->getUser($token);
 
         $this->assertEquals($email, $user->getEmail());
         $this->assertEquals($firstname, $user->getFirstname());

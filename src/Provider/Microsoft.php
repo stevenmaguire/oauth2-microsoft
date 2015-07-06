@@ -2,6 +2,7 @@
 
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Token\AccessToken;
+use Psr\Http\Message\ResponseInterface;
 
 class Microsoft extends AbstractProvider
 {
@@ -27,7 +28,7 @@ class Microsoft extends AbstractProvider
      *
      * @return string
      */
-    public function getBaseAccessTokenUrl()
+    public function getBaseAccessTokenUrl(array $params)
     {
         return 'https://login.live.com/oauth20_token.srf';
     }
@@ -46,10 +47,12 @@ class Microsoft extends AbstractProvider
      * Check a provider response for errors.
      *
      * @throws IdentityProviderException
-     * @param  string $response
+     * @param  ResponseInterface $response
      * @return void
+     *
+     * @todo  Decide what this needs to do!
      */
-    protected function checkResponse($response)
+    protected function checkResponse(ResponseInterface $response, $data)
     {
 
     }
@@ -57,11 +60,11 @@ class Microsoft extends AbstractProvider
     /**
      * Generate a user object from a successful user details request.
      *
-     * @param object $response
+     * @param array $response
      * @param AccessToken $token
      * @return \League\OAuth2\Client\Provider\UserInterface
      */
-    protected function prepareUserDetails(array $response, AccessToken $token)
+    protected function createUser(array $response, AccessToken $token)
     {
         $imageUrl = $this->getUserImageUrl($response, $token);
 
@@ -107,8 +110,6 @@ class Microsoft extends AbstractProvider
         $request = $this->getAuthenticatedRequest('get', $url, $token);
 
         $response = $this->getResponse($request);
-
-        $this->checkResponse($response);
 
         return $response;
     }
