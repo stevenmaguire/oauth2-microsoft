@@ -58,7 +58,7 @@ if (!isset($_GET['code'])) {
     try {
 
         // We got an access token, let's now get the user's details
-        $user = $provider->getUserDetails($token);
+        $user = $provider->getUser($token);
 
         // Use these details to create a new profile
         printf('Hello %s!', $user->getFirstname());
@@ -76,14 +76,64 @@ if (!isset($_GET['code'])) {
 
 #### Managing Scopes and State
 
-Specific `scope` and a custom `state` values may be declared when you request an authorization url from the provider.
+When creating your Microsoft authorization URL, you can specify the state and scopes your application may authorize.
 
 ```php
-$authorizationUrl = $provider->getAuthorizationUrl([
-    'state' => 'OPTIONAL CUSTOM CONFIGURED STATE',
-    'scope' => ['OPTIONAL', 'SCOPES'] // array or string
-]);
+$options = [
+    'state' => 'OPTIONAL_CUSTOM_CONFIGURED_STATE',
+    'scope' => ['wl.basic', 'wl.signin'] // array or string
+];
+
+$authorizationUrl = $provider->getAuthorizationUrl($options);
 ```
 If neither are defined, the provider will utilize internal defaults.
 
+At the time of authoring this documentation, the following scopes are available.
+
+##### Core
+- wl.basic
+- wl.offline_access
+- wl.signin
+
+##### Extended
+- wl.birthday
+- wl.calendars
+- wl.calendars_update
+- wl.contacts_birthday
+- wl.contacts_create
+- wl.contacts_calendars
+- wl.contacts_photos
+- wl.contacts_skydrive
+- wl.emails
+- wl.events_create
+- wl.imap
+- wl.phone_numbers
+- wl.photos
+- wl.postal_addresses
+- wl.skydrive
+- wl.skydrive_update
+- wl.work_profile
+- office.onenote_create
+
+
+## Testing
+
+``` bash
+$ ./vendor/bin/phpunit
+```
+
+## Contributing
+
+Please see [CONTRIBUTING](https://github.com/stevenmaguire/oauth2-microsoft/blob/master/CONTRIBUTING.md) for details.
+
+
+## Credits
+
+- [Steven Maguire](https://github.com/stevenmaguire)
+- [All Contributors](https://github.com/stevenmaguire/oauth2-microsoft/contributors)
+
+
+## License
+
+The MIT License (MIT). Please see [License File](https://github.com/stevenmaguire/oauth2-microsoft/blob/master/LICENSE) for more information.
 
