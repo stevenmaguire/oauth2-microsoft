@@ -66,21 +66,11 @@ class Microsoft extends AbstractProvider
      */
     protected function createUser(array $response, AccessToken $token)
     {
+        $user = new User($response, $response['id']);
+
         $imageUrl = $this->getUserImageUrl($response, $token);
 
-        $email = (isset($response['emails']['preferred'])) ? $response['emails']['preferred'] : null;
-
-        $attributes = [
-            'userId' => $response['id'],
-            'name' => $response['name'],
-            'firstname' => $response['first_name'],
-            'lastname' => $response['last_name'],
-            'email' => $email,
-            'imageurl' => $imageUrl,
-            'urls' => $response['link'].'/cid-'.$response['id'],
-        ];
-
-        return new User($attributes);
+        return $user->setImageurl($imageUrl);
     }
 
     /**

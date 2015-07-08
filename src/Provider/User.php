@@ -1,83 +1,28 @@
 <?php namespace Stevenmaguire\OAuth2\Client\Provider;
 
-use League\OAuth2\Client\Provider\UserInterface;
+use League\OAuth2\Client\Provider\StandardUser;
 
-class User implements UserInterface
+/**
+ * @property array $response
+ * @property string $uid
+ */
+class User extends StandardUser
 {
     /**
-     * User email
-     *
-     * @var string
-     */
-    protected $email;
-
-    /**
-     * User firstname
-     *
-     * @var string
-     */
-    protected $firstname;
-
-    /**
-     * User imageurl
+     * Image url
      *
      * @var string
      */
     protected $imageurl;
 
     /**
-     * User lastname
+     * Get user id
      *
-     * @var string
+     * @return string
      */
-    protected $lastname;
-
-    /**
-     * User name
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * User userId
-     *
-     * @var string
-     */
-    protected $userId;
-
-    /**
-     * User urls
-     *
-     * @var string
-     */
-    protected $urls;
-
-    /**
-     * Create new user
-     *
-     * @param array $attributes
-     */
-    public function __construct($attributes = [])
+    public function getUserId()
     {
-        array_walk($attributes, [$this, 'mergeAttribute']);
-    }
-
-    /**
-     * Attempt to merge individual attributes with user properties
-     *
-     * @param  mixed   $value
-     * @param  string  $key
-     *
-     * @return void
-     */
-    private function mergeAttribute($value, $key)
-    {
-        $method = 'set'.ucfirst($key);
-
-        if (method_exists($this, $method)) {
-            $this->$method($value);
-        }
+        return $this->uid;
     }
 
     /**
@@ -87,21 +32,7 @@ class User implements UserInterface
      */
     public function getEmail()
     {
-        return $this->email;
-    }
-
-    /**
-     * Set user email
-     *
-     * @param  string $email
-     *
-     * @return this
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
+        return $this->response['emails']['preferred'] ?: null;
     }
 
     /**
@@ -111,21 +42,7 @@ class User implements UserInterface
      */
     public function getFirstname()
     {
-        return $this->firstname;
-    }
-
-    /**
-     * Set user firstname
-     *
-     * @param  string $firstname
-     *
-     * @return this
-     */
-    public function setFirstname($firstname)
-    {
-        $this->firstname = $firstname;
-
-        return $this;
+        return $this->response['first_name'] ?: null;
     }
 
     /**
@@ -141,9 +58,7 @@ class User implements UserInterface
     /**
      * Set user imageurl
      *
-     * @param  string $imageurl
-     *
-     * @return this
+     * @return string
      */
     public function setImageurl($imageurl)
     {
@@ -159,21 +74,7 @@ class User implements UserInterface
      */
     public function getLastname()
     {
-        return $this->lastname;
-    }
-
-    /**
-     * Set user lastname
-     *
-     * @param  string $lastname
-     *
-     * @return this
-     */
-    public function setLastname($lastname)
-    {
-        $this->lastname = $lastname;
-
-        return $this;
+        return $this->response['last_name'] ?: null;
     }
 
     /**
@@ -183,45 +84,7 @@ class User implements UserInterface
      */
     public function getName()
     {
-        return $this->name;
-    }
-
-    /**
-     * Set user name
-     *
-     * @param  string $name
-     *
-     * @return this
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get user userId
-     *
-     * @return string
-     */
-    public function getUserId()
-    {
-        return $this->userId;
-    }
-
-    /**
-     * Set user userId
-     *
-     * @param  string $userId
-     *
-     * @return this
-     */
-    public function setUserId($userId)
-    {
-        $this->userId = $userId;
-
-        return $this;
+        return $this->response['name'] ?: null;
     }
 
     /**
@@ -231,20 +94,6 @@ class User implements UserInterface
      */
     public function getUrls()
     {
-        return $this->urls;
-    }
-
-    /**
-     * Set user urls
-     *
-     * @param  string $urls
-     *
-     * @return this
-     */
-    public function setUrls($urls)
-    {
-        $this->urls = $urls;
-
-        return $this;
+        return isset($this->response['link']) ? $this->response['link'].'/cid-'.$this->uid : null;
     }
 }
