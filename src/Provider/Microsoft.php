@@ -64,9 +64,9 @@ class Microsoft extends AbstractProvider
      * @param AccessToken $token
      * @return \League\OAuth2\Client\Provider\UserInterface
      */
-    protected function createUser(array $response, AccessToken $token)
+    protected function createResourceOwner(array $response, AccessToken $token)
     {
-        $user = new User($response, $response['id']);
+        $user = new MicrosoftResourceOwner($response, $response['id']);
 
         $imageUrl = $this->getUserImageUrl($response, $token);
 
@@ -80,7 +80,7 @@ class Microsoft extends AbstractProvider
      *
      * @return string
      */
-    public function getUserDetailsUrl(AccessToken $token)
+    public function getResourceOwnerDetailsUrl(AccessToken $token)
     {
         return 'https://apis.live.net/v5.0/me?access_token='.$token;
     }
