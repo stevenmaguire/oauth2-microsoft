@@ -1,13 +1,26 @@
 <?php namespace Stevenmaguire\OAuth2\Client\Provider;
 
-use League\OAuth2\Client\Provider\GenericResourceOwner;
+use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 
-/**
- * @property array $response
- * @property string $uid
- */
-class MicrosoftResourceOwner extends GenericResourceOwner
+class MicrosoftResourceOwner implements ResourceOwnerInterface
 {
+    /**
+     * Raw response
+     *
+     * @var array
+     */
+    protected $response;
+
+    /**
+     * Creates new resource owner.
+     *
+     * @param array  $response
+     */
+    public function __construct(array $response = array())
+    {
+        $this->response = $response;
+    }
+
     /**
      * Image url
      *
@@ -18,17 +31,17 @@ class MicrosoftResourceOwner extends GenericResourceOwner
     /**
      * Get user id
      *
-     * @return string
+     * @return string|null
      */
     public function getId()
     {
-        return $this->resourceOwnerId;
+        return $this->response['id'] ?: null;
     }
 
     /**
      * Get user email
      *
-     * @return string
+     * @return string|null
      */
     public function getEmail()
     {
@@ -38,7 +51,7 @@ class MicrosoftResourceOwner extends GenericResourceOwner
     /**
      * Get user firstname
      *
-     * @return string
+     * @return string|null
      */
     public function getFirstname()
     {
@@ -48,7 +61,7 @@ class MicrosoftResourceOwner extends GenericResourceOwner
     /**
      * Get user imageurl
      *
-     * @return string
+     * @return string|null
      */
     public function getImageurl()
     {
@@ -58,7 +71,7 @@ class MicrosoftResourceOwner extends GenericResourceOwner
     /**
      * Set user imageurl
      *
-     * @return string
+     * @return string|null
      */
     public function setImageurl($imageurl)
     {
@@ -70,7 +83,7 @@ class MicrosoftResourceOwner extends GenericResourceOwner
     /**
      * Get user lastname
      *
-     * @return string
+     * @return string|null
      */
     public function getLastname()
     {
@@ -80,7 +93,7 @@ class MicrosoftResourceOwner extends GenericResourceOwner
     /**
      * Get user name
      *
-     * @return string
+     * @return string|null
      */
     public function getName()
     {
@@ -90,10 +103,20 @@ class MicrosoftResourceOwner extends GenericResourceOwner
     /**
      * Get user urls
      *
-     * @return string
+     * @return string|null
      */
     public function getUrls()
     {
-        return isset($this->response['link']) ? $this->response['link'].'/cid-'.$this->resourceOwnerId : null;
+        return isset($this->response['link']) ? $this->response['link'].'/cid-'.$this->getId() : null;
+    }
+
+    /**
+     * Return all of the owner details available as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->response;
     }
 }

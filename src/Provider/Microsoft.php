@@ -66,7 +66,7 @@ class Microsoft extends AbstractProvider
      */
     protected function createResourceOwner(array $response, AccessToken $token)
     {
-        $user = new MicrosoftResourceOwner($response, $response['id']);
+        $user = new MicrosoftResourceOwner($response);
 
         $imageUrl = $this->getUserImageUrl($response, $token);
 

@@ -113,11 +113,17 @@ class MicrosoftTest extends \PHPUnit_Framework_TestCase
         $user = $this->provider->getResourceOwner($token);
 
         $this->assertEquals($email, $user->getEmail());
+        $this->assertEquals($email, $user->toArray()['emails']['preferred']);
         $this->assertEquals($firstname, $user->getFirstname());
+        $this->assertEquals($firstname, $user->toArray()['first_name']);
         $this->assertEquals($lastname, $user->getLastname());
+        $this->assertEquals($lastname, $user->toArray()['last_name']);
         $this->assertEquals($name, $user->getName());
+        $this->assertEquals($name, $user->toArray()['name']);
         $this->assertEquals($userId, $user->getId());
+        $this->assertEquals($userId, $user->toArray()['id']);
         $this->assertEquals($urls.'/cid-'.$userId, $user->getUrls());
+        $this->assertEquals($urls.'/cid-'.$userId, $user->toArray()['link'].'/cid-'.$user->toArray()['id']);
         $this->assertNull($user->getImageurl());
     }
 
