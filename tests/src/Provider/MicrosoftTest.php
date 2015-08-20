@@ -166,4 +166,25 @@ class MicrosoftTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($userId, $user->getId());
         $this->assertEquals($urls.'/cid-'.$userId, $user->getUrls());
     }
+
+    /**
+     * @expectedException League\OAuth2\Client\Provider\Exception\IdentityProviderException
+     **/
+    public function testExceptionThrownWhenErrorObjectReceived()
+    {
+        $message = uniqid();
+
+        $postResponse = m::mock('Psr\Http\Message\ResponseInterface');
+        $postResponse->shouldReceive('getBody')->andReturn('{"error": {"code": "request_token_expired", "message": "'.$message.'"}}');
+        $postResponse->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
+        $postResponse->shouldReceive('getStatusCode')->andReturn(500);
+
+        $client = m::mock('GuzzleHttp\ClientInterface');
+        $client->shouldReceive('send')
+            ->times(1)
+            ->andReturn($postResponse);
+        $this->provider->setHttpClient($client);
+
+        $token = $this->provider->getAccessToken('authorization_code', ['code' => 'mock_authorization_code']);
+    }
 }
