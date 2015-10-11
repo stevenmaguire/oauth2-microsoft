@@ -19,6 +19,7 @@ class MicrosoftResourceOwner implements ResourceOwnerInterface
     public function __construct(array $response = array())
     {
         $this->response = $response;
+        $this->response['link']=$this->getUrls();
     }
 
     /**
