@@ -55,7 +55,7 @@ class Microsoft extends AbstractProvider
     {
         if (isset($data['error'])) {
             throw new IdentityProviderException(
-                $data['error']['message'] ?: $response->getReasonPhrase(),
+                (isset($data['error']['message']) ? $data['error']['message'] : $response->getReasonPhrase()),
                 $response->getStatusCode(),
                 $response
             );
