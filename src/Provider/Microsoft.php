@@ -102,11 +102,11 @@ class Microsoft extends AbstractProvider
     {
         $url = 'https://apis.live.net/v5.0/'.$response['id'].'/picture';
 
-        $request = $this->getAuthenticatedRequest('get', $url, $token);
+        $request = $this->getAuthenticatedRequest('get', $url, $token, ['allow_redirects' => false]);
 
-        $response = $this->getResponse($request);
+        $response = $this->sendRequest($request);
 
-        return $response;
+        return $response->getHeaderLine('content-location');
     }
 
     /**
@@ -121,8 +121,8 @@ class Microsoft extends AbstractProvider
     {
         $image = $this->getUserImage($response, $token);
 
-        if (isset($image['url'])) {
-            return $image['url'];
+        if (isset($image) && filter_var($image, FILTER_VALIDATE_URL)) {
+            return $image;
         }
 
         return null;
