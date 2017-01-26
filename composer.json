@@ -34,10 +34,5 @@
         "psr-4": {
             "Stevenmaguire\\OAuth2\\Client\\Test\\": "tests/src/"
         }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-        }
     }
 }
