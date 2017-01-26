@@ -67,7 +67,7 @@ class Microsoft extends AbstractProvider
      *
      * @param array $response
      * @param AccessToken $token
-     * @return \League\OAuth2\Client\Provider\UserInterface
+     * @return MicrosoftResourceOwner
      */
     protected function createResourceOwner(array $response, AccessToken $token)
     {
