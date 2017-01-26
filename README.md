@@ -9,9 +9,6 @@
 
 This package provides Microsoft OAuth 2.0 support for the PHP League's [OAuth 2.0 Client](https://github.com/thephpleague/oauth2-client).
 
-> The latest release of this package is specifically designed to support Microsoft OAuth 2.0 support when using the OAuth 2.0 Client ~1.0.
-> If you area currently using OAuth 2.0 Client < 1.0, that package includes a built-in Microsoft Provider.
-
 ## Installation
 
 To install, use composer:

@@ -106,7 +106,7 @@ class Microsoft extends AbstractProvider
 
         $response = $this->getResponse($request);
 
-        return $response;
+        return json_decode((string) $response->getBody(), true);
     }
 
     /**
