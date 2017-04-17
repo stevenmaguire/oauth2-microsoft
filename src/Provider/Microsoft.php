@@ -127,4 +127,19 @@ class Microsoft extends AbstractProvider
 
         return null;
     }
+
+    protected function getDefaultScopes()
+    {
+
+    }
+
+    protected function checkResponse($response)
+    {
+
+    }
+
+    protected function prepareUserDetails(array $response, AccessToken $token)
+    {
+
+    }
 }
