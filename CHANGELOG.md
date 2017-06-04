@@ -1,6 +1,23 @@
 # Changelog
 All Notable changes to `oauth2-microsoft` will be documented in this file
 
+## 2.1.0 - 2017-06-04
+
+### Added
+- Support for custom authorization urls, previous URLs serve as default values.
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Nothing
+
+### Removed
+- Nothing
+
+### Security
+- Nothing
+
 ## 2.0.0 - 2017-01-25
 
 ### Added

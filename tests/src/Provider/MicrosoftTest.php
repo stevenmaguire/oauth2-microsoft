@@ -39,14 +39,6 @@ class MicrosoftTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($this->provider->getState());
     }
 
-    public function testGetAuthorizationUrl()
-    {
-        $url = $this->provider->getAuthorizationUrl();
-        $uri = parse_url($url);
-
-        $this->assertEquals('/oauth20_authorize.srf', $uri['path']);
-    }
-
     public function testScopes()
     {
         $scopeSeparator = ',';
@@ -57,6 +49,14 @@ class MicrosoftTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($encodedScope, $url);
     }
 
+    public function testGetAuthorizationUrl()
+    {
+        $url = $this->provider->getAuthorizationUrl();
+        $uri = parse_url($url);
+
+        $this->assertEquals('/oauth20_authorize.srf', $uri['path']);
+    }
+
     public function testGetBaseAccessTokenUrl()
     {
         $params = [];
@@ -65,6 +65,31 @@ class MicrosoftTest extends \PHPUnit_Framework_TestCase
         $uri = parse_url($url);
 
         $this->assertEquals('/oauth20_token.srf', $uri['path']);
+    }
+
+    public function testSettingAuthEndpoints()
+    {
+        $customAuthUrl = uniqid();
+        $customTokenUrl = uniqid();
+        $customResourceOwnerUrl = uniqid();
+        $token = m::mock('League\OAuth2\Client\Token\AccessToken');
+
+        $this->provider = new \Stevenmaguire\OAuth2\Client\Provider\Microsoft([
+            'clientId' => 'mock_client_id',
+            'clientSecret' => 'mock_secret',
+            'redirectUri' => 'none',
+            'urlAuthorize' => $customAuthUrl,
+            'urlAccessToken' => $customTokenUrl,
+            'urlResourceOwnerDetails' => $customResourceOwnerUrl
+        ]);
+
+        $authUrl = $this->provider->getAuthorizationUrl();
+        $this->assertContains($customAuthUrl, $authUrl);
+        $tokenUrl = $this->provider->getBaseAccessTokenUrl([]);
+        $this->assertContains($customTokenUrl, $tokenUrl);
+        $resourceOwnerUrl = $this->provider->getResourceOwnerDetailsUrl($token);
+        $this->assertContains($customResourceOwnerUrl, $resourceOwnerUrl);
+
     }
 
     public function testGetAccessToken()

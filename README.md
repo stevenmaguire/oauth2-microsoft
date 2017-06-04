@@ -24,9 +24,14 @@ Usage is the same as The League's OAuth client, using `\Stevenmaguire\OAuth2\Cli
 
 ```php
 $provider = new Stevenmaguire\OAuth2\Client\Provider\Microsoft([
-    'clientId'          => '{microsoft-client-id}',
-    'clientSecret'      => '{microsoft-client-secret}',
-    'redirectUri'       => 'https://example.com/callback-url'
+    // Required
+    'clientId'                  => '{microsoft-client-id}',
+    'clientSecret'              => '{microsoft-client-secret}',
+    'redirectUri'               => 'https://example.com/callback-url',
+    // Optional
+    'urlAuthorize'              => 'https://login.windows.net/common/oauth2/authorize',
+    'urlAccessToken'            => 'https://login.windows.net/common/oauth2/token',
+    'urlResourceOwnerDetails'   => 'https://outlook.office.com/api/v1.0/me'
 ]);
 
 if (!isset($_GET['code'])) {

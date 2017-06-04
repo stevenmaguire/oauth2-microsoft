@@ -4,6 +4,7 @@ use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use Psr\Http\Message\ResponseInterface;
+use GuzzleHttp\Psr7\Uri;
 
 class Microsoft extends AbstractProvider
 {
@@ -15,13 +16,34 @@ class Microsoft extends AbstractProvider
     public $defaultScopes = ['wl.basic', 'wl.emails'];
 
     /**
+     * Base url for authorization.
+     *
+     * @var string
+     */
+    protected $urlAuthorize = 'https://login.live.com/oauth20_authorize.srf';
+
+    /**
+     * Base url for access token.
+     *
+     * @var string
+     */
+    protected $urlAccessToken = 'https://login.live.com/oauth20_token.srf';
+
+    /**
+     * Base url for resource owner.
+     *
+     * @var string
+     */
+    protected $urlResourceOwnerDetails = 'https://apis.live.net/v5.0/me';
+
+    /**
      * Get authorization url to begin OAuth flow
      *
      * @return string
      */
     public function getBaseAuthorizationUrl()
     {
-        return 'https://login.live.com/oauth20_authorize.srf';
+        return $this->urlAuthorize;
     }
 
     /**
@@ -31,7 +53,7 @@ class Microsoft extends AbstractProvider
      */
     public function getBaseAccessTokenUrl(array $params)
     {
-        return 'https://login.live.com/oauth20_token.srf';
+        return $this->urlAccessToken;
     }
 
     /**
@@ -87,7 +109,9 @@ class Microsoft extends AbstractProvider
      */
     public function getResourceOwnerDetailsUrl(AccessToken $token)
     {
-        return 'https://apis.live.net/v5.0/me?access_token='.$token;
+        $uri = new Uri($this->urlResourceOwnerDetails);
+
+        return (string) Uri::withQueryValue($uri, 'access_token', (string) $token);
     }
 
     /**
