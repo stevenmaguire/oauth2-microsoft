@@ -93,11 +93,7 @@ class Microsoft extends AbstractProvider
      */
     protected function createResourceOwner(array $response, AccessToken $token)
     {
-        $user = new MicrosoftResourceOwner($response);
-
-        $imageUrl = $this->getUserImageUrl($response, $token);
-
-        return $user->setImageurl($imageUrl);
+        return new MicrosoftResourceOwner($response);
     }
 
     /**
@@ -112,43 +108,5 @@ class Microsoft extends AbstractProvider
         $uri = new Uri($this->urlResourceOwnerDetails);
 
         return (string) Uri::withQueryValue($uri, 'access_token', (string) $token);
-    }
-
-    /**
-     * Get user image from provider
-     *
-     * @param  array        $response
-     * @param  AccessToken  $token
-     *
-     * @return array
-     */
-    protected function getUserImage(array $response, AccessToken $token)
-    {
-        $url = 'https://apis.live.net/v5.0/'.$response['id'].'/picture';
-
-        $request = $this->getAuthenticatedRequest('get', $url, $token);
-
-        $response = $this->getResponse($request);
-
-        return json_decode((string) $response->getBody(), true);
-    }
-
-    /**
-     * Get user image url from provider, if available
-     *
-     * @param  array        $response
-     * @param  AccessToken  $token
-     *
-     * @return string
-     */
-    protected function getUserImageUrl(array $response, AccessToken $token)
-    {
-        $image = $this->getUserImage($response, $token);
-
-        if (isset($image['url'])) {
-            return $image['url'];
-        }
-
-        return null;
     }
 }

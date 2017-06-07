@@ -111,7 +111,7 @@ class MicrosoftTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($token->getResourceOwnerId());
     }
 
-    public function testUserDataWithoutImage()
+    public function testUserData()
     {
         $email = uniqid();
         $firstname = uniqid();
@@ -128,14 +128,10 @@ class MicrosoftTest extends \PHPUnit_Framework_TestCase
         $userResponse->shouldReceive('getBody')->andReturn('{"id": '.$userId.', "name": "'.$name.'", "first_name": "'.$firstname.'", "last_name": "'.$lastname.'", "emails": {"preferred": "'.$email.'"}, "link": "'.$urls.'"}');
         $userResponse->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
 
-        $imageResponse = m::mock('Psr\Http\Message\ResponseInterface');
-        $imageResponse->shouldReceive('getBody')->andReturn('{}');
-        $imageResponse->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
-
         $client = m::mock('GuzzleHttp\ClientInterface');
         $client->shouldReceive('send')
-            ->times(3)
-            ->andReturn($postResponse, $userResponse, $imageResponse);
+            ->times(2)
+            ->andReturn($postResponse, $userResponse);
         $this->provider->setHttpClient($client);
 
         $token = $this->provider->getAccessToken('authorization_code', ['code' => 'mock_authorization_code']);
@@ -153,47 +149,6 @@ class MicrosoftTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($userId, $user->toArray()['id']);
         $this->assertEquals($urls.'/cid-'.$userId, $user->getUrls());
         $this->assertEquals($urls.'/cid-'.$userId, $user->toArray()['link'].'/cid-'.$user->toArray()['id']);
-        $this->assertNull($user->getImageurl());
-    }
-
-    public function testUserDataWithImage()
-    {
-        $email = uniqid();
-        $firstname = uniqid();
-        $imageurl = uniqid();
-        $lastname = uniqid();
-        $name = uniqid();
-        $userId = rand(1000,9999);
-        $urls = uniqid();
-
-        $postResponse = m::mock('Psr\Http\Message\ResponseInterface');
-        $postResponse->shouldReceive('getBody')->andReturn('{"access_token": "mock_access_token", "expires": 3600, "refresh_token": "mock_refresh_token", "uid": '.$userId.'}');
-        $postResponse->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
-
-        $userResponse = m::mock('Psr\Http\Message\ResponseInterface');
-        $userResponse->shouldReceive('getBody')->andReturn('{"id": '.$userId.', "name": "'.$name.'", "first_name": "'.$firstname.'", "last_name": "'.$lastname.'", "emails": {"preferred": "'.$email.'"}, "link": "'.$urls.'"}');
-        $userResponse->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
-
-        $imageResponse = m::mock('Psr\Http\Message\ResponseInterface');
-        $imageResponse->shouldReceive('getBody')->andReturn('{"url":"'.$imageurl.'"}');
-        $imageResponse->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
-
-        $client = m::mock('GuzzleHttp\ClientInterface');
-        $client->shouldReceive('send')
-            ->times(3)
-            ->andReturn($postResponse, $userResponse, $imageResponse);
-        $this->provider->setHttpClient($client);
-
-        $token = $this->provider->getAccessToken('authorization_code', ['code' => 'mock_authorization_code']);
-        $user = $this->provider->getResourceOwner($token);
-
-        $this->assertEquals($email, $user->getEmail());
-        $this->assertEquals($firstname, $user->getFirstname());
-        $this->assertEquals($imageurl, $user->getImageurl());
-        $this->assertEquals($lastname, $user->getLastname());
-        $this->assertEquals($name, $user->getName());
-        $this->assertEquals($userId, $user->getId());
-        $this->assertEquals($urls.'/cid-'.$userId, $user->getUrls());
     }
 
     /**

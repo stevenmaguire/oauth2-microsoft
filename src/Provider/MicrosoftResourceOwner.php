@@ -22,13 +22,6 @@ class MicrosoftResourceOwner implements ResourceOwnerInterface
     }
 
     /**
-     * Image url
-     *
-     * @var string
-     */
-    protected $imageurl;
-
-    /**
      * Get user id
      *
      * @return string|null
@@ -56,28 +49,6 @@ class MicrosoftResourceOwner implements ResourceOwnerInterface
     public function getFirstname()
     {
         return $this->response['first_name'] ?: null;
-    }
-
-    /**
-     * Get user imageurl
-     *
-     * @return string|null
-     */
-    public function getImageurl()
-    {
-        return $this->imageurl;
-    }
-
-    /**
-     * Set user imageurl
-     *
-     * @return string|null
-     */
-    public function setImageurl($imageurl)
-    {
-        $this->imageurl = $imageurl;
-
-        return $this;
     }
 
     /**

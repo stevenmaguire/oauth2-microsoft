@@ -1,6 +1,23 @@
 # Changelog
 All Notable changes to `oauth2-microsoft` will be documented in this file
 
+## 2.2.0 - 2017-06-07
+
+### Added
+- Nothing
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Nothing
+
+### Removed
+- Support for retrieving image urls.
+
+### Security
+- Nothing
+
 ## 2.1.0 - 2017-06-04
 
 ### Added
