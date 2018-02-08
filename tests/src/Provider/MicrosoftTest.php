@@ -177,7 +177,11 @@ class MicrosoftTest extends \PHPUnit_Framework_TestCase
         $token = uniqid();
 
         $headers = $this->provider->getHeaders($token);
+        $this->assertTrue(!array_key_exists('Authorization', $headers));
 
+        $this->provider->setAccessTokenType(\Stevenmaguire\OAuth2\Client\Provider\Microsoft::ACCESS_TOKEN_TYPE_BEARER);
+        $headers = $this->provider->getHeaders($token);
+        $this->assertArrayHasKey('Authorization', $headers);
         $this->assertEquals($headers['Authorization'], 'Bearer ' . $token);
     }
 
