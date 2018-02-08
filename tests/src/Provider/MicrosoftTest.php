@@ -171,4 +171,18 @@ class MicrosoftTest extends \PHPUnit_Framework_TestCase
 
         $token = $this->provider->getAccessToken('authorization_code', ['code' => 'mock_authorization_code']);
     }
+
+    public function testBearerAuthorizationHeader()
+    {
+        $token = uniqid();
+
+        $headers = $this->provider->getHeaders($token);
+        $this->assertTrue(!array_key_exists('Authorization', $headers));
+
+        $this->provider->setAccessTokenType(\Stevenmaguire\OAuth2\Client\Provider\Microsoft::ACCESS_TOKEN_TYPE_BEARER);
+        $headers = $this->provider->getHeaders($token);
+        $this->assertArrayHasKey('Authorization', $headers);
+        $this->assertEquals($headers['Authorization'], 'Bearer ' . $token);
+    }
+
 }

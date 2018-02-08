@@ -9,6 +9,20 @@ use Psr\Http\Message\ResponseInterface;
 class Microsoft extends AbstractProvider
 {
     /**
+     * No access token type
+     *
+     * @var string
+     */
+    const ACCESS_TOKEN_TYPE_NONE = '';
+
+    /**
+     * Access token type 'Bearer'
+     *
+     * @var string
+     */
+    const ACCESS_TOKEN_TYPE_BEARER = 'Bearer';
+
+    /**
      * Default scopes
      *
      * @var array
@@ -37,6 +51,13 @@ class Microsoft extends AbstractProvider
     protected $urlResourceOwnerDetails = 'https://apis.live.net/v5.0/me';
 
     /**
+     * The access token type to use. Defaults to none.
+     *
+     * @var string
+     */
+    protected $accessTokenType = self::ACCESS_TOKEN_TYPE_NONE;
+
+    /**
      * Get authorization url to begin OAuth flow
      *
      * @return string
@@ -54,6 +75,16 @@ class Microsoft extends AbstractProvider
     public function getBaseAccessTokenUrl(array $params)
     {
         return $this->urlAccessToken;
+    }
+
+    /**
+     * Sets the access token type used for authorization.
+     *
+     * @param string The access token type to use.
+     */
+    public function setAccessTokenType($accessTokenType)
+    {
+        $this->accessTokenType = $accessTokenType;
     }
 
     /**
@@ -108,5 +139,22 @@ class Microsoft extends AbstractProvider
         $uri = new Uri($this->urlResourceOwnerDetails);
 
         return (string) Uri::withQueryValue($uri, 'access_token', (string) $token);
+    }
+
+    /**
+     * Returns the authorization headers used by this provider.
+     *
+     * @param  mixed|null $token Either a string or an access token instance
+     * @return array
+     */
+    protected function getAuthorizationHeaders($token = null)
+    {
+        switch ($this->accessTokenType) {
+            case self::ACCESS_TOKEN_TYPE_BEARER:
+                return ['Authorization' => 'Bearer ' .  $token];
+            case self::ACCESS_TOKEN_TYPE_NONE:
+            default:
+                return [];
+        }
     }
 }
