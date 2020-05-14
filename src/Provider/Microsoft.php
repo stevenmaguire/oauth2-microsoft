@@ -4,10 +4,13 @@ use GuzzleHttp\Psr7\Uri;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
+use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
 
 class Microsoft extends AbstractProvider
 {
+    use BearerAuthorizationTrait;
+
     /**
      * Default scopes
      *
@@ -34,7 +37,7 @@ class Microsoft extends AbstractProvider
      *
      * @var string
      */
-    protected $urlResourceOwnerDetails = 'https://apis.live.net/v5.0/me';
+    protected $urlResourceOwnerDetails = 'https://graph.microsoft.com/v1.0/me';
 
     /**
      * Get authorization url to begin OAuth flow

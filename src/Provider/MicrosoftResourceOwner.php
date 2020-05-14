@@ -38,27 +38,73 @@ class MicrosoftResourceOwner implements ResourceOwnerInterface
      */
     public function getEmail()
     {
-        return $this->response['emails']['preferred'] ?: null;
+        return $this->response['mail'] ?: null;
     }
 
     /**
-     * Get user firstname
+     * Get user principal name
+     *
+     * @return string|null
+     */
+    public function getPrincipalName()
+    {
+        return $this->response['userPrincipalName'] ?: null;
+    }
+
+    /**
+     * @deprecated will be removed in 3.0. Use getGivenName() instead.
+     *
+     * Get user first name
      *
      * @return string|null
      */
     public function getFirstname()
     {
-        return $this->response['first_name'] ?: null;
+        return $this->getGivenName();
     }
 
     /**
+     * Get user given name (first name)
+     *
+     * @return string|null
+     */
+    public function getGivenName()
+    {
+        return $this->response['givenName'] ?: null;
+    }
+
+    /**
+     * @deprecated will be removed in 3.0. Use getSurname() instead.
+     *
      * Get user lastname
      *
      * @return string|null
      */
     public function getLastname()
     {
-        return $this->response['last_name'] ?: null;
+        return $this->getSurname();
+    }
+
+    /**
+     * Get user surname
+     *
+     * @return string|null
+     */
+    public function getSurname()
+    {
+        return $this->response['surname'] ?: null;
+    }
+
+    /**
+     * @deprecated will be removed in 3.0. Use getDisplayName() instead.
+     *
+     * Get user name
+     *
+     * @return string|null
+     */
+    public function getName()
+    {
+        return $this->getDisplayName();
     }
 
     /**
@@ -66,19 +112,21 @@ class MicrosoftResourceOwner implements ResourceOwnerInterface
      *
      * @return string|null
      */
-    public function getName()
+    public function getDisplayName()
     {
-        return $this->response['name'] ?: null;
+        return $this->response['displayName'] ?: null;
     }
 
     /**
+     * @deprecated will be removed in 3.0.
+     *
      * Get user urls
      *
      * @return string|null
      */
     public function getUrls()
     {
-        return isset($this->response['link']) ? $this->response['link'].'/cid-'.$this->getId() : null;
+        return null;
     }
 
     /**
@@ -88,6 +136,11 @@ class MicrosoftResourceOwner implements ResourceOwnerInterface
      */
     public function toArray()
     {
-        return $this->response;
+        return $this->response + [
+            'first_name' => $this->response['givenName'],
+            'last_name' => $this->response['surname'],
+            'name' => $this->response['displayName'],
+            'link' => null
+        ];
     }
 }

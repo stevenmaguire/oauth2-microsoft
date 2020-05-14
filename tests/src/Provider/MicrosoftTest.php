@@ -118,14 +118,14 @@ class MicrosoftTest extends \PHPUnit_Framework_TestCase
         $lastname = uniqid();
         $name = uniqid();
         $userId = rand(1000,9999);
-        $urls = uniqid();
+        $userPrincipalName = uniqid();
 
         $postResponse = m::mock('Psr\Http\Message\ResponseInterface');
         $postResponse->shouldReceive('getBody')->andReturn('{"access_token":"mock_access_token","authentication_token":"","code":"","expires_in":3600,"refresh_token":"mock_refresh_token","scope":"","state":"","token_type":""}');
         $postResponse->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
 
         $userResponse = m::mock('Psr\Http\Message\ResponseInterface');
-        $userResponse->shouldReceive('getBody')->andReturn('{"id": '.$userId.', "name": "'.$name.'", "first_name": "'.$firstname.'", "last_name": "'.$lastname.'", "emails": {"preferred": "'.$email.'"}, "link": "'.$urls.'"}');
+        $userResponse->shouldReceive('getBody')->andReturn('{"id": '.$userId.', "displayName": "'.$name.'", "givenName": "'.$firstname.'", "surname": "'.$lastname.'", "mail": "'.$email.'", "userPrincipalName": "'.$userPrincipalName.'"}');
         $userResponse->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
 
         $client = m::mock('GuzzleHttp\ClientInterface');
@@ -138,17 +138,25 @@ class MicrosoftTest extends \PHPUnit_Framework_TestCase
         $user = $this->provider->getResourceOwner($token);
 
         $this->assertEquals($email, $user->getEmail());
-        $this->assertEquals($email, $user->toArray()['emails']['preferred']);
+        $this->assertEquals($email, $user->toArray()['mail']);
+        $this->assertEquals($userPrincipalName, $user->getPrincipalName());
+        $this->assertEquals($userPrincipalName, $user->toArray()['userPrincipalName']);
         $this->assertEquals($firstname, $user->getFirstname());
         $this->assertEquals($firstname, $user->toArray()['first_name']);
+        $this->assertEquals($firstname, $user->getGivenName());
+        $this->assertEquals($firstname, $user->toArray()['givenName']);
         $this->assertEquals($lastname, $user->getLastname());
         $this->assertEquals($lastname, $user->toArray()['last_name']);
+        $this->assertEquals($lastname, $user->getSurname());
+        $this->assertEquals($lastname, $user->toArray()['surname']);
         $this->assertEquals($name, $user->getName());
         $this->assertEquals($name, $user->toArray()['name']);
+        $this->assertEquals($name, $user->getDisplayName());
+        $this->assertEquals($name, $user->toArray()['displayName']);
         $this->assertEquals($userId, $user->getId());
         $this->assertEquals($userId, $user->toArray()['id']);
-        $this->assertEquals($urls.'/cid-'.$userId, $user->getUrls());
-        $this->assertEquals($urls.'/cid-'.$userId, $user->toArray()['link'].'/cid-'.$user->toArray()['id']);
+        $this->assertNull($user->getUrls());
+        $this->assertNull($user->toArray()['link']);
     }
 
     /**
