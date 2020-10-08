@@ -20,14 +20,14 @@ class Microsoft extends AbstractProvider
      *
      * @var string
      */
-    protected $urlAuthorize = 'https://login.live.com/oauth20_authorize.srf';
+    protected $urlAuthorize = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize';
 
     /**
      * Base url for access token.
      *
      * @var string
      */
-    protected $urlAccessToken = 'https://login.live.com/oauth20_token.srf';
+    protected $urlAccessToken = 'https://login.microsoftonline.com/common/oauth2/v2.0/token';
 
     /**
      * Base url for resource owner.
@@ -108,5 +108,16 @@ class Microsoft extends AbstractProvider
         $uri = new Uri($this->urlResourceOwnerDetails);
 
         return (string) Uri::withQueryValue($uri, 'access_token', (string) $token);
+    }
+
+    /**
+     * Returns the string that should be used to separate scopes when building
+     * the URL for requesting an access token.
+     *
+     * @return string Scope separator, defaults to ' '
+     */
+    public function getScopeSeparator()
+    {
+        return ' ';
     }
 }
